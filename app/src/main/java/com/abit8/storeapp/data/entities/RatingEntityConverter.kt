@@ -4,7 +4,7 @@ import androidx.room.TypeConverter
 import com.google.gson.Gson
 
 class RatingEntityConverter {
-
+//конвертер для сортировки
     @TypeConverter
     fun fromRatingEntity(ratingEntity: RatingEntity): String {
         return Gson().toJson(ratingEntity)

@@ -11,6 +11,7 @@ import com.abit8.storeapp.data.entities.CategoryEntity
 import com.abit8.storeapp.data.entities.ProductEntity
 import com.abit8.storeapp.data.entities.ProductDetailsEntity
 
+//пришлось 3 раза версию менять из за изменении
 @Database(entities = [CategoryEntity::class, ProductEntity::class, ProductDetailsEntity::class], version = 3)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun categoryDao(): CategoryDao

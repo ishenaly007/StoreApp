@@ -10,7 +10,7 @@ object ApiClient {
     private val okHttpClient: OkHttpClient by lazy {
         OkHttpClient.Builder().build()
     }
-
+    //апишка
     val storeApiService: StoreApiService by lazy {
         Retrofit.Builder()
             .baseUrl(BASE_URL)

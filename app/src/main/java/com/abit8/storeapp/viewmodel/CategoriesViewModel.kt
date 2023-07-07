@@ -12,6 +12,7 @@ class CategoriesViewModel(private val repository: StoreRepository) : ViewModel()
     private val _categories = MutableLiveData<List<Category>>()
     val categories: LiveData<List<Category>> get() = _categories
 
+    //тут надо изменять типы данных, по другому не получается
     suspend fun fetchCategories() {
         val cachedCategories = repository.getCategoriesFromCache()
         if (cachedCategories.isNotEmpty()) {

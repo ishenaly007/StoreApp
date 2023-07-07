@@ -26,6 +26,7 @@ class StoreRepository(private val database: AppDatabase) {
     val selectedCategory: LiveData<String> get() = _selectedCategory
     val product: LiveData<Product> get() = _product
 
+    //изменитель типа данных на Product
     private fun mapToProduct(productEntity: ProductEntity): Product {
         return Product(
             id = productEntity.id,
@@ -38,6 +39,9 @@ class StoreRepository(private val database: AppDatabase) {
         )
     }
 
+    //тоже что и выше но с другой тип изменяет
+    //ИМЕННО ЭТОТ МЕТОД НЕ ДАЕТ ПОКОЯ И НЕ РАБОТАЕТ, НАДО БУДЕТ ЕГО ДОРАБОТАТЬ,
+    // null приходит все время
     private fun mapToProduct(productDetailsEntity: ProductDetailsEntity): Product {
         return Product(
             id = productDetailsEntity?.productId ?: 0L,
@@ -50,15 +54,14 @@ class StoreRepository(private val database: AppDatabase) {
         )
     }
 
-
-
+    //это я забыл где, аа это для экрана продукта, исправлю код, тогда и использую
     suspend fun fetchProductById(id: Long) {
         withContext(Dispatchers.IO) {
             try {
                 val product = storeApiService.getProductById(id)
                 _product.postValue(product)
 
-                // Сохранение продукта в базу данных
+                // Сохранение продукта в бд
                 saveProductDetails(
                     ProductDetailsEntity(
                         product.id,
@@ -69,8 +72,8 @@ class StoreRepository(private val database: AppDatabase) {
                     )
                 )
             } catch (e: Exception) {
-                // Обработка ошибки при отсутствии интернет-соединения
-                // Загрузка продукта из базы данных
+                // Обработка при отсутствии интернета
+                // Загрузка продукта из бд
                 val cachedProduct = getProductByIdFromCache(id)
                 _product.postValue(cachedProduct)
             }
@@ -91,6 +94,7 @@ class StoreRepository(private val database: AppDatabase) {
         }
     }
 
+    //тоже потом
     private suspend fun getProductDetailsFromCache(productId: Long): ProductDetailsEntity {
         return withContext(Dispatchers.IO) {
             database.productDetailsDao().getProductDetailsById(productId)
@@ -108,7 +112,7 @@ class StoreRepository(private val database: AppDatabase) {
                 _products.postValue(products)
                 _selectedCategory.postValue(category)
 
-                // Сохранение продуктов в базу данных
+                // Сохранение продуктов в бд
                 saveProducts(products.map {
                     ProductEntity(
                         it.id,
@@ -124,8 +128,8 @@ class StoreRepository(private val database: AppDatabase) {
                 // Уведомление обратного вызова о завершении сохранения продуктов
                 listener?.onProductsSaved()
             } catch (e: Exception) {
-                // Обработка ошибки при отсутствии интернет-соединения
-                // Загрузка продуктов из базы данных
+                // Обработка ошибки без интернета
+                // Загрузка продуктов из бд
                 val cachedProducts = getProductsByCategoryFromCache(category)
                 val products = cachedProducts.map { mapToProduct(it) }
                 _products.postValue(products)
@@ -165,6 +169,7 @@ class StoreRepository(private val database: AppDatabase) {
         }
     }
 
+    //обработчик
     interface OnProductsSavedListener {
         fun onProductsSaved()
     }

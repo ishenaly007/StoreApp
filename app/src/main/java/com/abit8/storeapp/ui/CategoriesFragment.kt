@@ -54,12 +54,13 @@ class CategoriesFragment : Fragment() {
             adapter = categoriesAdapter
             layoutManager = LinearLayoutManager(requireContext())
         }
-
+        //тоже
         viewModel.categories.observe(viewLifecycleOwner) { categories ->
             categoriesAdapter.categories = categories
             categoriesAdapter.notifyDataSetChanged()
         }
 
+        //обновление и просмотр и вставка
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.fetchCategories()
         }
@@ -77,6 +78,7 @@ class CategoriesFragment : Fragment() {
         _binding = null
     }
 
+    //чтобы красным не горело, а так горит же без него
     private fun createStoreRepository(): StoreRepository {
         return StoreRepository(database)
     }
